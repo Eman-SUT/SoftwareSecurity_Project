@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>Checkout: {{ p['name'] }}</h2>
+  <p>Price: <b>${{ p['price'] }}</b> &nbsp; | &nbsp; In stock: {{ p['stock'] }}</p>
+  <p>Your credit: <b>${{ '%.2f'|format(user['credit']) }}</b></p>
+</div>
+
+<form method="post" class="card">
+  {% if not secure %}
+    {# NAIVE: the price is sent from the browser, so the attacker can change it #}
+    <input type="hidden" name="price" value="{{ p['price'] }}">
+  {% endif %}
+  <label>Quantity</label>
+  <input type="number" name="qty" value="1">
+  <label>Coupon code (try SAVE10)</label>
+  <input type="text" name="coupon" placeholder="Coupon code">
+  <button type="submit" class="btn">Buy now</button>
+</form>
+<p><a href="{{ url_for('product', pid=p['id']) }}">Back to product</a></p>
+{% endblock %}

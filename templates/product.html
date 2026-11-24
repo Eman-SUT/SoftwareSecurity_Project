@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>{{ p['name'] }}</h2>
+  <p>{{ p['description'] }}</p>
+  <b>${{ p['price'] }}</b>
+  <p><a class="btn" href="{{ url_for('checkout', pid=p['id']) }}" style="text-decoration:none;display:inline-block">Buy</a></p>
+</div>
+
+<h3>Reviews</h3>
+{% for r in reviews %}
+<div class="card">
+  <b>{{ r['username'] }}:</b>
+  {# SECURE: Jinja auto-escapes HTML, so <script> shows as plain text #}
+  <p>{{ r['body'] }}</p>
+</div>
+{% else %}
+<p>No reviews yet.</p>
+{% endfor %}
+
+<form method="post" action="{{ url_for('add_review', pid=p['id']) }}" class="card">
+  {% if csrf_token is defined %}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  {% endif %}
+  <textarea name="body" rows="3" maxlength="1000" placeholder="Write a review" required></textarea>
+  <button type="submit" class="btn">Post review</button>
+</form>
+{% endblock %}
